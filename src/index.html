@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-	
-    <title>Typescript Starter</title>
-	  <meta name="description" content="Typescript Starter">
-	  <meta name="author" content="https://github.com/nea">
-  </head>
-  <body>
-	  <script src="index.js"></script>
-  </body>
+    <head>
+        <meta charset="utf-8" />
+
+        <title>Tic-Tac-Toeception</title>
+        <meta name="description" content="Tic-Tac-Toeception" />
+        <meta name="author" content="https://github.com/nea" />
+        <link href="stylesheet.css" media="screen" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div id="info">
+            <span id="message">X to play</span>
+            <button id="play" onclick="document.dispatchEvent(new Event('play'))">Play best move</button>
+            <button id="undo" onclick="document.dispatchEvent(new Event('undo'))">UNDO</button>
+            <button id="restart" onclick="document.dispatchEvent(new Event('restart'))" >RESTART!</button>
+        </div>
+        <div id="board">
+            <canvas id="canvas" width="900" height="900"></canvas>
+        </div>
+        <script type="text/javascript" src="package.js"></script>
+    </body>
 </html>

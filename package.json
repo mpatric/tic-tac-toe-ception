@@ -2,27 +2,41 @@
   "name": "tic-tac-toeception",
   "version": "0.1.0",
   "scripts": {
-    "start": "run-s watch",
+    "start": "npm run clean && npm run build && run-s watch",
     "test": "npx jest",
-    "serve": "browser-sync start -s \"bin\" -f \"bin\"",
-    "build": "run-s build:*",
-    "build:assets": "copyfiles -u 1 \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" bin",
-    "build:scss": "node-sass --output-style compressed -r src -o bin",
-    "build:tsc": "tsc",
+    "clean": "rm -rf build",
+    "serve": "browser-sync start -s \"build/dist\" -f \"build/dist\"",
+    "build": "mkdir -p build/dist && run-s build:*",
+    "build:assets": "copyfiles -u 1 \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" build/dist",
+    "build:scss": "node-sass --output-style compressed -r src -o build/dist",
+    "build:tsc": "tsc-bundle tsconfig.json --outFile build/dist/package.js",
     "watch": "run-p serve watch:*",
-    "watch:tsc": "tsc -w",
+    "watch:tsc": "tsc-bundle tsconfig.json --outFile build/dist/package.js --watch",
     "watch:scss": "onchange \"src/**/*.scss\" -- run-s build:scss",
     "watch:assets": "onchange \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" -- run-s build:assets"
   },
   "devDependencies": {
+    "@babel/parser": "^7.7.5",
+    "@babel/types": "^7.7.4",
+    "@types/jest": "^24.0.23",
+    "@typescript-eslint/eslint-plugin": "^2.14.0",
+    "@typescript-eslint/parser": "^2.14.0",
     "browser-sync": "^2.18.0",
     "copyfiles": "^1.2.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint": "^6.8.0",
+    "jest-diff": "^24.9.0",
+    "jest": "^24.9.0",
     "node-sass": "^4.5.0",
     "npm-run-all": "^4.0.0",
     "onchange": "^3.2.0",
+    "prettier": "^1.19.1",
+    "ts-jest": "^24.2.0",
+    "typescript-bundle": "^1.0.16",
     "typescript": "~3.7.3"
   },
   "dependencies": {
-    "jest": "^24.9.0"
+    "eslint-plugin-import": "^2.19.1"
   }
 }

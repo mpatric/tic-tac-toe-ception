@@ -1,1 +1,0 @@
-export const makeGreeting = (firstName: string, lastName: string): string => `Hello ${firstName} ${lastName}!`;

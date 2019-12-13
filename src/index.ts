@@ -1,5 +1,4 @@
-import { makeGreeting} from "./greeter";
+import { Game } from './game';
 
-var message = makeGreeting('John', 'Smith');
-
-document.body.innerHTML = message;
+const game = new Game();
+game.start();
