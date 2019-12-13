@@ -1,0 +1,28 @@
+{
+  "name": "tic-tac-toeception",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "run-s watch",
+    "test": "npx jest",
+    "serve": "browser-sync start -s \"bin\" -f \"bin\"",
+    "build": "run-s build:*",
+    "build:assets": "copyfiles -u 1 \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" bin",
+    "build:scss": "node-sass --output-style compressed -r src -o bin",
+    "build:tsc": "tsc",
+    "watch": "run-p serve watch:*",
+    "watch:tsc": "tsc -w",
+    "watch:scss": "onchange \"src/**/*.scss\" -- run-s build:scss",
+    "watch:assets": "onchange \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" -- run-s build:assets"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.0",
+    "copyfiles": "^1.2.0",
+    "node-sass": "^4.5.0",
+    "npm-run-all": "^4.0.0",
+    "onchange": "^3.2.0",
+    "typescript": "~3.7.3"
+  },
+  "dependencies": {
+    "jest": "^24.9.0"
+  }
+}
