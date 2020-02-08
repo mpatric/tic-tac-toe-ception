@@ -75,9 +75,9 @@ export class BoardRenderer {
         this.drawPieces(board);
         this.drawWinner(board);
 
-        if (selectedSquare && !getWinner(board)) {
+        if (selectedSquare) {
             if (this.depth === 1) {
-                if (getSquareState(board, selectedSquare) === Blank.Blank) {
+                if (getSquareState(board, selectedSquare) === Blank.Blank && !getWinner(board)) {
                     this.drawHighlight(board, selectedSquare, nextPlayer(board));
                     const boardWithMovePlayed = playMove(board, selectedSquare);
                     const childGameTree = negamax(boardWithMovePlayed);
