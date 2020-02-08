@@ -19,14 +19,16 @@ body {
     min-height: 0;
 }
 #info {
-    align-self: center;
+    text-align: center;
     justify-content: space-between;
-    padding: 10px;
+    padding: 10px 0;
+    width: 100%;
     button {
         height: 30px;
+        padding: 0;
     }
     span, button {
-       margin: 0 10px;
+       margin: 0 1px;
     }
 }
 #canvas {
