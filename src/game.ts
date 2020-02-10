@@ -109,10 +109,14 @@ export class Game {
         this.newBoard();
     };
 
-    private mouseMoveHandler = (e: MouseEvent) => {
-        const x = e.pageX - canvas.offsetLeft;
-        const y = e.pageY - canvas.offsetTop;
-        const square = this.boardRenderer.canvasCoordinateToSquareCoordinate(screenToCanvas({ x, y }));
+    private mouseEventToCoordinates(e: MouseEvent): Coordinate {
+        return {
+            x: e.pageX - canvas.offsetLeft,
+            y: e.pageY - canvas.offsetTop
+        };
+    }
+
+    private selectSquare(square: Coordinate) {
         const selectedSquare = square && getSquareState(this.board, square) === Blank.Blank ? square : undefined;
         if (this.selectedSquare || selectedSquare) {
             if (
@@ -126,16 +130,28 @@ export class Game {
                 this.boardRenderer.draw(this.board, this.gameTree, this.selectedSquare);
             }
         }
+    }
+
+    private mouseMoveHandler = (e: MouseEvent) => {
+        const coordinate = this.mouseEventToCoordinates(e);
+        const square = this.boardRenderer.canvasCoordinateToSquareCoordinate(screenToCanvas(coordinate));
+        this.selectSquare(square);
     };
 
     private mouseOutHandler = () => {
         this.selectedSquare = undefined;
     };
 
-    private mouseClickHandler = () => {
-        if (this.selectedSquare && !getWinner(this.board)) {
-            this.playMove(this.selectedSquare);
+    private mouseClickHandler = (e: MouseEvent) => {
+        if (!getWinner(this.board)) {
+            const coordinate = this.mouseEventToCoordinates(e);
+            const square = this.boardRenderer.canvasCoordinateToSquareCoordinate(screenToCanvas(coordinate));
+            if (this.selectedSquare && square.x === this.selectedSquare.x && square.y === this.selectedSquare.y) {
+                this.playMove(square);
+                this.selectedSquare = undefined;
+            } else {
+                this.selectSquare(square);
+            }
         }
-        this.selectedSquare = undefined;
     };
 }
