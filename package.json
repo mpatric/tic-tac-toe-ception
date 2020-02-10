@@ -5,7 +5,7 @@
     "start": "npm run clean && npm run build && run-s watch",
     "test": "npx jest",
     "clean": "rm -rf build",
-    "serve": "browser-sync start -s \"build/dist\" -f \"build/dist\"",
+    "serve": "browser-sync start -s \"build/dist\" -f \"build/dist\" --host 0.0.0.0 --port 4000",
     "build": "mkdir -p build/dist && run-s build:*",
     "build:assets": "copyfiles -u 1 \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" build/dist",
     "build:scss": "node-sass --output-style compressed -r src -o build/dist",
