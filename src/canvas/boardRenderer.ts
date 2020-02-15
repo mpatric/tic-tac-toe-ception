@@ -9,8 +9,8 @@ import {
     playMove,
     SquareState
 } from '../model/board';
-import { Coordinate } from '../game';
 import { negamax, TreeNode } from '../model';
+import { Coordinate } from '../model/coordinate';
 
 interface Region {
     x: number;
@@ -71,7 +71,12 @@ export class BoardRenderer {
             childRenderer.draw(child.board, child, child.move);
         };
 
-        this.drawOutline();
+        if (this.depth > 1) {
+            this.drawOutline();
+        }
+        if (this.depth === 1) {
+            this.drawSquares(board);
+        }
         this.drawPieces(board);
         this.drawWinner(board);
 
@@ -100,15 +105,22 @@ export class BoardRenderer {
         const x = this.region.x + padding;
         const y = this.region.y + padding;
         const size = this.region.size - 2 * padding;
-        this.canvasContext.beginPath();
-        this.canvasContext.moveTo(x, y);
-        this.canvasContext.lineTo(x + size, y);
-        this.canvasContext.lineTo(x + size, y + size);
-        this.canvasContext.lineTo(x, y + size);
-        this.canvasContext.lineTo(x, y);
         this.canvasContext.lineWidth = lineWidth;
         this.canvasContext.strokeStyle = strokeStyle;
+        this.canvasContext.rect(x, y, size, size);
         this.canvasContext.stroke();
+    }
+
+    private drawSquares(board: Board) {
+        for (let sy = 0; sy < 3; sy++) {
+            for (let sx = 0; sx < 3; sx++) {
+                const { x, y, size } = this.squareDrawableRegions[sy][sx];
+                this.canvasContext.lineWidth = 1;
+                this.canvasContext.strokeStyle = '#999';
+                this.canvasContext.rect(x, y, size, size);
+                this.canvasContext.stroke();
+            }
+        }
     }
 
     private drawPieces(board: Board) {

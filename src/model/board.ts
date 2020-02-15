@@ -1,3 +1,5 @@
+import { Coordinate } from './coordinate';
+
 export enum Player {
     X = 1,
     O = 2
@@ -9,16 +11,11 @@ export enum Blank {
 
 export type SquareState = Player | Blank;
 
-export interface BoardCoordinate {
-    x: number;
-    y: number;
-}
-
-export interface Rank {
+interface Rank {
     rank: number;
 }
 
-export type BoardCoordinateWithRank = BoardCoordinate & Rank;
+export type CoordinateWithRank = Coordinate & Rank;
 
 export const SquareStateToChar: { [key: number]: string } = {
     0: '.',
@@ -62,16 +59,16 @@ export const boardFromString = (s: string): Board => {
     }, makeBoard());
 };
 
-const coordinateToIndex = (coordinate: BoardCoordinate): number => coordinate.y * 3 + coordinate.x;
+const coordinateToIndex = (coordinate: Coordinate): number => coordinate.y * 3 + coordinate.x;
 
-export const indexToCoordinate = (index: number): BoardCoordinate => ({ x: index % 3, y: Math.floor(index / 3) });
+export const indexToCoordinate = (index: number): Coordinate => ({ x: index % 3, y: Math.floor(index / 3) });
 
 const getSquareStateByIndex = (board: Board, index: number): SquareState => (board >> (2 * index)) & 3;
 
-export const getSquareState = (board: Board, coordinate: BoardCoordinate): SquareState =>
+export const getSquareState = (board: Board, coordinate: Coordinate): SquareState =>
     getSquareStateByIndex(board, coordinateToIndex(coordinate));
 
-export const setSquareState = (board: Board, coordinate: BoardCoordinate, squareState: SquareState): Board => {
+export const setSquareState = (board: Board, coordinate: Coordinate, squareState: SquareState): Board => {
     if (getSquareState(board, coordinate) !== Blank.Blank) {
         throw new Error('Tried to play on a non-empty square');
     }
@@ -83,7 +80,7 @@ const countFilledSquares = (board: Board): number =>
 
 export const nextPlayer = (board: Board): Player => (countFilledSquares(board) % 2 === 0 ? Player.X : Player.O);
 
-export const playMove = (board: Board, coordinate: BoardCoordinate): Board =>
+export const playMove = (board: Board, coordinate: Coordinate): Board =>
     setSquareState(board, coordinate, (nextPlayer(board) as unknown) as SquareState);
 
 export const getWinner = (board: Board): { player: Player; line: number[] } | void => {
@@ -110,7 +107,7 @@ const defaultRankFunction = (board: Board, index: number) => countPossibleWinsBy
 export const getAvailableMoves = (
     board: Board,
     rankFunction: RankFunction = defaultRankFunction
-): BoardCoordinateWithRank[] =>
+): CoordinateWithRank[] =>
     Indices.reduce(
         (a, i) =>
             getSquareStateByIndex(board, i) === Blank.Blank
@@ -122,7 +119,7 @@ export const getAvailableMoves = (
 export const getAvailableMovesRanked = (
     board: Board,
     rankFunction: RankFunction = defaultRankFunction
-): BoardCoordinateWithRank[] =>
+): CoordinateWithRank[] =>
     getAvailableMoves(board, rankFunction).sort((coordinate1, coordinate2) => coordinate2.rank - coordinate1.rank);
 
 export const countPossibleWinsByIndex = (board: Board, index: number) => {
@@ -134,5 +131,5 @@ export const countPossibleWinsByIndex = (board: Board, index: number) => {
     }, 0);
 };
 
-export const countPossibleWins = (board: Board, coordinate: BoardCoordinate) =>
+export const countPossibleWins = (board: Board, coordinate: Coordinate) =>
     countPossibleWinsByIndex(board, coordinateToIndex(coordinate));

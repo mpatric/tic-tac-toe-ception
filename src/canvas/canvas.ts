@@ -26,9 +26,16 @@ export const screenToCanvas = (screenCoordinate: Coordinate): Coordinate => {
 
 export const canvasToScreen = (canvasCoordinate: Coordinate): Coordinate => {
     return {
-        x: Math.round(canvasCoordinate.x * canvas.offsetWidth / size),
-        y: Math.round(canvasCoordinate.y * canvas.offsetHeight / size)
-    }
+        x: Math.round((canvasCoordinate.x * canvas.offsetWidth) / size),
+        y: Math.round((canvasCoordinate.y * canvas.offsetHeight) / size)
+    };
+};
+
+export const eventCoordinateToCanvas = (eventCoordinate: Coordinate): Coordinate => {
+    return screenToCanvas({
+        x: eventCoordinate.x - canvas.offsetLeft,
+        y: eventCoordinate.y - canvas.offsetTop
+    });
 };
 
 export { canvas, size, context };

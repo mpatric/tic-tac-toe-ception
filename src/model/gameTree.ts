@@ -1,18 +1,9 @@
-import {
-    Board,
-    BoardCoordinateWithRank,
-    boardToString,
-    getAvailableMovesRanked,
-    getWinner,
-    nextPlayer,
-    Player,
-    playMove
-} from './board';
+import { Board, CoordinateWithRank, getAvailableMovesRanked, getWinner, nextPlayer, Player, playMove } from './board';
 
 export interface TreeNode {
     children: TreeNode[];
     board: Board;
-    move: BoardCoordinateWithRank;
+    move: CoordinateWithRank;
     score?: number;
 }
 
@@ -20,7 +11,7 @@ const minAlphaBetaCutoffDepth = 5;
 
 export const negamax = (
     board: Board,
-    lastMoveWithRank: BoardCoordinateWithRank = undefined,
+    lastMoveWithRank: CoordinateWithRank = undefined,
     player: Player = nextPlayer(board),
     depth = 1,
     alpha = -Infinity,

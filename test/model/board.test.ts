@@ -17,6 +17,7 @@ import {
     SquareState,
     SquareStateToChar
 } from '../../src/model';
+import { sameCoordinates } from '../../src/model/coordinate';
 
 const allIndices = Array.from({ length: 9 }, (_, i) => i);
 const allCoordinates = allIndices.map(index => indexToCoordinate(index));
@@ -35,7 +36,7 @@ describe('tic-tac-toe board', () => {
                 const player = randomPlayer();
                 const board = setSquareState(makeBoard(), coordinate, player);
                 allCoordinates.forEach(testCoordinate => {
-                    if (coordinate.x === testCoordinate.x && coordinate.y === testCoordinate.y) {
+                    if (sameCoordinates(coordinate, testCoordinate)) {
                         expect(getSquareState(board, testCoordinate)).toEqual(player);
                     } else {
                         expect(getSquareState(board, testCoordinate)).toEqual(Blank.Blank);

@@ -7,16 +7,11 @@ import {
     negamax,
     nextPlayer,
     playMove,
-    SquareState,
     SquareStateToChar,
     TreeNode
 } from './model';
-import { BoardRenderer, canvas, screenToCanvas, size } from './canvas';
-
-export interface Coordinate {
-    x: number;
-    y: number;
-}
+import { BoardRenderer, canvas, eventCoordinateToCanvas, screenToCanvas, size } from './canvas';
+import { Coordinate, sameCoordinates } from './model/coordinate';
 
 type EventListener = (event?: UIEvent) => void;
 
@@ -37,9 +32,12 @@ export class Game {
         { element: document, type: 'play', listener: game.playEventHandler },
         { element: document, type: 'undo', listener: game.undoEventHandler },
         { element: document, type: 'restart', listener: game.restartEventHandler },
-        { element: canvas, type: 'mousemove', listener: game.mouseMoveHandler },
         { element: canvas, type: 'mouseleave', listener: game.mouseOutHandler },
-        { element: canvas, type: 'mouseup', listener: game.mouseClickHandler }
+        { element: canvas, type: 'mousemove', listener: game.mouseMoveHandler },
+        { element: canvas, type: 'click', listener: game.mouseClickHandler },
+        { element: canvas, type: 'touchstart', listener: game.touchMoveHandler },
+        { element: canvas, type: 'touchmove', listener: game.touchMoveHandler },
+        { element: canvas, type: 'touchend', listener: game.touchEndHandler }
     ];
 
     constructor() {
@@ -54,6 +52,8 @@ export class Game {
     public stop() {
         Game.eventHandlers(this).forEach(({ element, type, listener }) => element.removeEventListener(type, listener));
     }
+
+    // --- Managing game state ---
 
     private updateBoard(board: Board) {
         this.board = board;
@@ -93,6 +93,8 @@ export class Game {
         document.getElementById('message').innerText = message;
     }
 
+    // --- Event handlers ---
+
     private playEventHandler = () => {
         this.selectedSquare = undefined;
         const move = this.gameTree.children[0]?.move;
@@ -109,22 +111,36 @@ export class Game {
         this.newBoard();
     };
 
-    private mouseEventToCoordinates(e: MouseEvent): Coordinate {
-        return {
-            x: e.pageX - canvas.offsetLeft,
-            y: e.pageY - canvas.offsetTop
-        };
-    }
+    // --- UI event handlers ---
 
-    private selectSquare(square: Coordinate) {
+    private mouseOutHandler = () => {
+        this.selectedSquare = undefined;
+    };
+
+    private mouseMoveHandler = (e: MouseEvent) => {
+        this.onSelect({ x: e.pageX, y: e.pageY });
+    };
+
+    private mouseClickHandler = (e: MouseEvent) => {
+        this.onAction({ x: e.pageX, y: e.pageY });
+    };
+
+    private touchMoveHandler = (e: TouchEvent) => {
+        const lastTouch = e.touches.item(e.touches.length - 1);
+        this.onSelect({ x: lastTouch.pageX, y: lastTouch.pageY });
+        e.preventDefault();
+    };
+
+    private touchEndHandler = (e: TouchEvent) => {
+        this.onAction({ x: e.pageX, y: e.pageY });
+        e.preventDefault();
+    };
+
+    private onSelect(eventCoordinate: Coordinate) {
+        const square = this.boardRenderer.canvasCoordinateToSquareCoordinate(eventCoordinateToCanvas(eventCoordinate));
         const selectedSquare = square && getSquareState(this.board, square) === Blank.Blank ? square : undefined;
         if (this.selectedSquare || selectedSquare) {
-            if (
-                !this.selectedSquare ||
-                !selectedSquare ||
-                selectedSquare.x !== this.selectedSquare.x ||
-                selectedSquare.y !== this.selectedSquare.y
-            ) {
+            if (!this.selectedSquare || !selectedSquare || !sameCoordinates(selectedSquare, this.selectedSquare)) {
                 this.selectedSquare = selectedSquare;
                 this.boardRenderer.clear();
                 this.boardRenderer.draw(this.board, this.gameTree, this.selectedSquare);
@@ -132,26 +148,17 @@ export class Game {
         }
     }
 
-    private mouseMoveHandler = (e: MouseEvent) => {
-        const coordinate = this.mouseEventToCoordinates(e);
-        const square = this.boardRenderer.canvasCoordinateToSquareCoordinate(screenToCanvas(coordinate));
-        this.selectSquare(square);
-    };
-
-    private mouseOutHandler = () => {
-        this.selectedSquare = undefined;
-    };
-
-    private mouseClickHandler = (e: MouseEvent) => {
+    private onAction(eventCoordinate: Coordinate) {
         if (!getWinner(this.board)) {
-            const coordinate = this.mouseEventToCoordinates(e);
-            const square = this.boardRenderer.canvasCoordinateToSquareCoordinate(screenToCanvas(coordinate));
-            if (this.selectedSquare && square.x === this.selectedSquare.x && square.y === this.selectedSquare.y) {
+            const square = this.boardRenderer.canvasCoordinateToSquareCoordinate(
+                eventCoordinateToCanvas(eventCoordinate)
+            );
+            if (sameCoordinates(square, this.selectedSquare)) {
                 this.playMove(square);
                 this.selectedSquare = undefined;
             } else {
-                this.selectSquare(square);
+                this.onSelect(eventCoordinate);
             }
         }
-    };
+    }
 }
