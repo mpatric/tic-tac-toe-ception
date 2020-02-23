@@ -26,6 +26,7 @@ export class Game {
     history: Board[];
     boardRenderer: BoardRenderer;
     selectedSquare?: Coordinate;
+    touchStartSquare?: Coordinate;
     gameTree: TreeNode;
 
     private static eventHandlers = (game: Game): GameEventHandler[] => [
@@ -35,7 +36,7 @@ export class Game {
         { element: canvas, type: 'mouseleave', listener: game.mouseOutHandler },
         { element: canvas, type: 'mousemove', listener: game.mouseMoveHandler },
         { element: canvas, type: 'click', listener: game.mouseClickHandler },
-        { element: canvas, type: 'touchstart', listener: game.touchMoveHandler },
+        { element: canvas, type: 'touchstart', listener: game.touchStartHandler },
         { element: canvas, type: 'touchmove', listener: game.touchMoveHandler },
         { element: canvas, type: 'touchend', listener: game.touchEndHandler }
     ];
@@ -125,14 +126,21 @@ export class Game {
         this.onAction({ x: e.pageX, y: e.pageY });
     };
 
+    private touchStartHandler = (e: TouchEvent) => {
+        this.touchStartSquare = this.selectedSquare;
+        this.onSelect({ x: e.pageX, y: e.pageY });
+        e.preventDefault();
+    };
+
     private touchMoveHandler = (e: TouchEvent) => {
-        const lastTouch = e.touches.item(e.touches.length - 1);
-        this.onSelect({ x: lastTouch.pageX, y: lastTouch.pageY });
+        this.onSelect({ x: e.pageX, y: e.pageY });
         e.preventDefault();
     };
 
     private touchEndHandler = (e: TouchEvent) => {
-        this.onAction({ x: e.pageX, y: e.pageY });
+        if (this.selectedSquare && this.selectedSquare === this.touchStartSquare) {
+            this.onAction({ x: e.pageX, y: e.pageY });
+        }
         e.preventDefault();
     };
 
