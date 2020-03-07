@@ -105,6 +105,7 @@ export class BoardRenderer {
         const x = this.region.x + padding;
         const y = this.region.y + padding;
         const size = this.region.size - 2 * padding;
+        this.canvasContext.beginPath();
         this.canvasContext.lineWidth = lineWidth;
         this.canvasContext.strokeStyle = strokeStyle;
         this.canvasContext.rect(x, y, size, size);
@@ -115,6 +116,7 @@ export class BoardRenderer {
         for (let sy = 0; sy < 3; sy++) {
             for (let sx = 0; sx < 3; sx++) {
                 const { x, y, size } = this.squareDrawableRegions[sy][sx];
+                this.canvasContext.beginPath();
                 this.canvasContext.lineWidth = 1;
                 this.canvasContext.strokeStyle = '#999';
                 this.canvasContext.rect(x, y, size, size);
