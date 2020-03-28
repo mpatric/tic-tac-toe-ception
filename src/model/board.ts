@@ -78,6 +78,9 @@ export const setSquareState = (board: Board, coordinate: Coordinate, squareState
 const countFilledSquares = (board: Board): number =>
     Indices.reduce((count, i) => count + (getSquareStateByIndex(board, i) ? 1 : 0), 0);
 
+export const countEmptySquares = (board: Board): number =>
+    Indices.reduce((count, i) => count + (getSquareStateByIndex(board, i) ? 0 : 1), 0);
+
 export const nextPlayer = (board: Board): Player => (countFilledSquares(board) % 2 === 0 ? Player.X : Player.O);
 
 export const playMove = (board: Board, coordinate: Coordinate): Board =>

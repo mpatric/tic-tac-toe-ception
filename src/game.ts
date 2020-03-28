@@ -1,6 +1,7 @@
 import {
     Blank,
     Board,
+    countEmptySquares,
     getSquareState,
     getWinner,
     makeBoard,
@@ -85,6 +86,8 @@ export class Game {
         const winner = getWinner(this.board);
         if (winner) {
             this.updateMessage(`${SquareStateToChar[winner.player]} WINS!`);
+        } else if (countEmptySquares(this.board) === 0) {
+            this.updateMessage(`DRAW!`);
         } else {
             this.updateMessage(`${SquareStateToChar[nextPlayer(this.board)]} to play`);
         }
