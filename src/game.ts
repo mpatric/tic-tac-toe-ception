@@ -11,7 +11,7 @@ import {
     SquareStateToChar,
     TreeNode
 } from './model';
-import { BoardRenderer, canvas, eventCoordinateToCanvas, screenToCanvas, size } from './canvas';
+import { BoardRenderer, canvas, eventCoordinateToCanvas, size } from './canvas';
 import { Coordinate, sameCoordinates } from './model/coordinate';
 
 type EventListener = (event?: UIEvent) => void;
@@ -101,7 +101,7 @@ export class Game {
 
     private playEventHandler = () => {
         this.selectedSquare = undefined;
-        const move = this.gameTree.children[0]?.move;
+        const { move } = this.gameTree.children[0] || {};
         move && this.playMove(move);
     };
 
@@ -121,34 +121,43 @@ export class Game {
         this.selectedSquare = undefined;
     };
 
-    private mouseMoveHandler = (e: MouseEvent) => {
-        this.onSelect({ x: e.pageX, y: e.pageY });
+    private mouseMoveHandler = ({ pageX, pageY }: MouseEvent) => {
+        this.onSelect(this.eventCoordinateToSquare({ x: pageX, y: pageY }));
     };
 
-    private mouseClickHandler = (e: MouseEvent) => {
-        this.onAction({ x: e.pageX, y: e.pageY });
+    private mouseClickHandler = ({ pageX, pageY }: MouseEvent) => {
+        this.onAction(this.eventCoordinateToSquare({ x: pageX, y: pageY }));
     };
 
     private touchStartHandler = (e: TouchEvent) => {
-        this.touchStartSquare = this.selectedSquare;
-        this.onSelect({ x: e.pageX, y: e.pageY });
-        e.preventDefault();
-    };
-
-    private touchMoveHandler = (e: TouchEvent) => {
-        this.onSelect({ x: e.pageX, y: e.pageY });
-        e.preventDefault();
-    };
-
-    private touchEndHandler = (e: TouchEvent) => {
-        if (this.selectedSquare && this.selectedSquare === this.touchStartSquare) {
-            this.onAction({ x: e.pageX, y: e.pageY });
+        if (e.touches && e.touches.length > 0) {
+            const { clientX, clientY } = e.touches[0];
+            this.touchStartSquare = this.selectedSquare;
+            this.onSelect(this.eventCoordinateToSquare({ x: clientX, y: clientY }));
         }
         e.preventDefault();
     };
 
-    private onSelect(eventCoordinate: Coordinate) {
-        const square = this.boardRenderer.canvasCoordinateToSquareCoordinate(eventCoordinateToCanvas(eventCoordinate));
+    private touchMoveHandler = (e: TouchEvent) => {
+        if (e.touches && e.touches.length > 0) {
+            const { clientX, clientY } = e.touches[0];
+            this.onSelect(this.eventCoordinateToSquare({ x: clientX, y: clientY }));
+        }
+        e.preventDefault();
+    };
+
+    private touchEndHandler = (e: TouchEvent) => {
+        if (this.selectedSquare && sameCoordinates(this.selectedSquare, this.touchStartSquare)) {
+            this.onAction(this.selectedSquare);
+        }
+        e.preventDefault();
+    };
+
+    private eventCoordinateToSquare(eventCoordinate: Coordinate) {
+        return this.boardRenderer.canvasCoordinateToSquareCoordinate(eventCoordinateToCanvas(eventCoordinate));
+    }
+
+    private onSelect(square: Coordinate) {
         const selectedSquare = square && getSquareState(this.board, square) === Blank.Blank ? square : undefined;
         if (this.selectedSquare || selectedSquare) {
             if (!this.selectedSquare || !selectedSquare || !sameCoordinates(selectedSquare, this.selectedSquare)) {
@@ -159,16 +168,13 @@ export class Game {
         }
     }
 
-    private onAction(eventCoordinate: Coordinate) {
+    private onAction(square: Coordinate) {
         if (!getWinner(this.board)) {
-            const square = this.boardRenderer.canvasCoordinateToSquareCoordinate(
-                eventCoordinateToCanvas(eventCoordinate)
-            );
             if (sameCoordinates(square, this.selectedSquare)) {
                 this.playMove(square);
                 this.selectedSquare = undefined;
             } else {
-                this.onSelect(eventCoordinate);
+                this.onSelect(square);
             }
         }
     }

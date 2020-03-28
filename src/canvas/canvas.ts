@@ -6,8 +6,10 @@ const parent = canvas.parentElement;
 window.onresize = resizeCanvas;
 window.onload = resizeCanvas;
 
+const MIN_CANVAS_SIZE = 320;
+
 function resizeCanvas() {
-    const size = Math.max(320, Math.min(parent.offsetWidth, parent.offsetHeight));
+    const size = Math.max(MIN_CANVAS_SIZE, Math.min(parent.offsetWidth, parent.offsetHeight));
     canvas.style.width = `${size}px`;
     canvas.style.height = `${size}px`;
 }
