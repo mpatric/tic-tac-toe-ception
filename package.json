@@ -1,5 +1,5 @@
 {
-  "name": "tic-tac-toeception",
+  "name": "tic-tac-toe-ception",
   "version": "0.1.0",
   "scripts": {
     "start": "npm run clean && npm run build && run-s watch",
