@@ -7,10 +7,9 @@ export interface TreeNode {
     score?: number;
 }
 
-const minAlphaBetaCutoffDepth = 5;
-
 export const negamax = (
     board: Board,
+    minAlphaBetaCutoffDepth = 5,
     lastMoveWithRank: CoordinateWithRank = undefined,
     player: Player = nextPlayer(board),
     depth = 1,
@@ -42,7 +41,15 @@ export const negamax = (
     let children: TreeNode[] = [];
     const otherPlayer = 3 - player;
     for (const move of moves) {
-        const child = negamax(playMove(board, move), move, otherPlayer, depth + 1, -beta, -alpha);
+        const child = negamax(
+            playMove(board, move),
+            minAlphaBetaCutoffDepth,
+            move,
+            otherPlayer,
+            depth + 1,
+            -beta,
+            -alpha
+        );
         children = [...children, child];
         maxScore = Math.max(maxScore, -child.score);
         alpha = maxScore;
