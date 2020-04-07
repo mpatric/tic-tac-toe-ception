@@ -3,6 +3,5 @@ export interface Coordinate {
     y: number;
 }
 
-export const sameCoordinates = (first: Coordinate, second: Coordinate): boolean => {
-    return first.x === second.x && first.y === second.y;
-};
+export const sameCoordinates = (first?: Coordinate, second?: Coordinate): boolean =>
+    first != null && second != null && first?.x === second?.x && first?.y === second?.y;
