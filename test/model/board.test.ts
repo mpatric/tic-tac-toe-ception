@@ -15,12 +15,12 @@ import {
     playMove,
     setSquareState,
     SquareState,
-    SquareStateToChar
+    SquareStateToChar,
 } from '../../src/model';
 import { sameCoordinates } from '../../src/model/coordinate';
 
 const allIndices = Array.from({ length: 9 }, (_, i) => i);
-const allCoordinates = allIndices.map(index => indexToCoordinate(index));
+const allCoordinates = allIndices.map((index) => indexToCoordinate(index));
 
 describe('tic-tac-toe board', () => {
     describe('getting and setting square states', () => {
@@ -32,10 +32,10 @@ describe('tic-tac-toe board', () => {
         });
 
         it('should set the state of the specified square only', () => {
-            allCoordinates.forEach(coordinate => {
+            allCoordinates.forEach((coordinate) => {
                 const player = randomPlayer();
                 const board = setSquareState(makeBoard(), coordinate, player);
-                allCoordinates.forEach(testCoordinate => {
+                allCoordinates.forEach((testCoordinate) => {
                     if (sameCoordinates(coordinate, testCoordinate)) {
                         expect(getSquareState(board, testCoordinate)).toEqual(player);
                     } else {
@@ -47,7 +47,10 @@ describe('tic-tac-toe board', () => {
 
         it('should set the state of multiple squares', () => {
             let board = makeBoard();
-            const coordinates = shuffle(allCoordinates).map(coordinate => ({ ...coordinate, player: randomPlayer() }));
+            const coordinates = shuffle(allCoordinates).map((coordinate) => ({
+                ...coordinate,
+                player: randomPlayer(),
+            }));
             coordinates.forEach(({ x, y, player }) => {
                 board = setSquareState(board, { x, y }, player);
             });
@@ -131,7 +134,7 @@ describe('tic-tac-toe board', () => {
                 { x: 2, y: 1, rank: 5 },
                 { x: 0, y: 2, rank: 6 },
                 { x: 1, y: 2, rank: 7 },
-                { x: 2, y: 2, rank: 8 }
+                { x: 2, y: 2, rank: 8 },
             ]);
         });
 
@@ -147,7 +150,7 @@ describe('tic-tac-toe board', () => {
                 { x: 1, y: 0, rank: 10 },
                 { x: 0, y: 2, rank: 2 },
                 { x: 0, y: 1, rank: 1 },
-                { x: 0, y: 0, rank: 0 }
+                { x: 0, y: 0, rank: 0 },
             ]);
         });
     });
@@ -236,7 +239,7 @@ describe('tic-tac-toe board', () => {
 
 function expectArraysWithSameElements(arr1: any[], arr2: any[]) {
     expect(arr1.length).toEqual(arr2.length);
-    arr1.forEach(el => {
+    arr1.forEach((el) => {
         expect(arr2).toContainEqual(el);
     });
 }

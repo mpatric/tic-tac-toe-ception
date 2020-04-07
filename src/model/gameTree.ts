@@ -23,7 +23,7 @@ export const negamax = (
             children: [],
             move: lastMoveWithRank,
             board,
-            score
+            score,
         };
     }
 
@@ -33,7 +33,7 @@ export const negamax = (
             children: [],
             move: lastMoveWithRank,
             board,
-            score: 0
+            score: 0,
         };
     }
 
@@ -62,6 +62,6 @@ export const negamax = (
         children: sortedChildren,
         move: lastMoveWithRank,
         board,
-        score: alpha
+        score: alpha,
     };
 };

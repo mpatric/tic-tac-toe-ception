@@ -2,11 +2,11 @@ import { Coordinate } from './coordinate';
 
 export enum Player {
     X = 1,
-    O = 2
+    O = 2,
 }
 
 export enum Blank {
-    Blank = 0
+    Blank = 0,
 }
 
 export type SquareState = Player | Blank;
@@ -20,12 +20,12 @@ export type CoordinateWithRank = Coordinate & Rank;
 export const SquareStateToChar: { [key: number]: string } = {
     0: '.',
     1: 'X',
-    2: 'O'
+    2: 'O',
 };
 
 const CharToSquareState: { [key: string]: SquareState } = {
     X: Player.X,
-    O: Player.O
+    O: Player.O,
 };
 
 // bit masks for checking for complete lines for X, shift left once to get bit masks for O
@@ -37,7 +37,7 @@ const LineBitMasks = [
     0b000100000100000100, // [1, 4, 7]
     0b010000010000010000, // [2, 5, 8]
     0b010000000100000001, // [0, 4, 8]
-    0b000001000100010000 // [2, 4, 6]
+    0b000001000100010000, // [2, 4, 6]
 ];
 
 const Indices = Array.from({ length: 9 }, (_, i) => i); // 0 to 8

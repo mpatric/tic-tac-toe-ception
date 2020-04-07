@@ -9,7 +9,7 @@ import {
     nextPlayer,
     playMove,
     SquareStateToChar,
-    TreeNode
+    TreeNode,
 } from './model';
 import { BoardRenderer, canvas, eventCoordinateToCanvas, size } from './canvas';
 import { Coordinate, sameCoordinates } from './model/coordinate';
@@ -39,7 +39,7 @@ export class Game {
         { element: canvas, type: 'click', listener: game.mouseClickHandler },
         { element: canvas, type: 'touchstart', listener: game.touchStartHandler },
         { element: canvas, type: 'touchmove', listener: game.touchMoveHandler },
-        { element: canvas, type: 'touchend', listener: game.touchEndHandler }
+        { element: canvas, type: 'touchend', listener: game.touchEndHandler },
     ];
 
     constructor() {
