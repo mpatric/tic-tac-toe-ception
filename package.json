@@ -23,18 +23,18 @@
     "@typescript-eslint/parser": "^2.14.0",
     "browser-sync": "^2.18.0",
     "copyfiles": "^1.2.0",
+    "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "eslint": "^6.8.0",
-    "jest-diff": "^24.9.0",
     "jest": "^24.9.0",
+    "jest-diff": "^24.9.0",
     "node-sass": "^4.5.0",
     "npm-run-all": "^4.0.0",
     "onchange": "^3.2.0",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.2",
     "ts-jest": "^24.2.0",
-    "typescript-bundle": "^1.0.16",
-    "typescript": "~3.7.3"
+    "typescript": "^3.7.4",
+    "typescript-bundle": "^1.0.16"
   },
   "dependencies": {
     "eslint-plugin-import": "^2.19.1"
