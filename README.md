@@ -1,6 +1,6 @@
 # Tic-Tac-Toe-ception
 
-This is an interactive version of the complete map of tic-tac-toe moves as popularised by [xkcd](https://xkcd.com/832/)
+This is an interactive version of the complete map of tic-tac-toe moves as popularised by [xkcd](https://xkcd.com/832/).
 
 Try it here: [https://www.mpatric.com/tic-tac-toe-ception/](https://www.mpatric.com/tic-tac-toe-ception/)
 
